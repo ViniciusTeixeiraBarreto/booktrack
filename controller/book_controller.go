@@ -58,7 +58,7 @@ func CreateBook(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, book)
+	c.JSON(201, book)
 }
 
 func ShowBooks(c *gin.Context) {
@@ -128,5 +128,7 @@ func DeleteBook(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, book)
+	c.JSON(200, gin.H{
+		"ok": true,
+	})
 }

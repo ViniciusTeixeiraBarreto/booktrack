@@ -7,6 +7,8 @@ import (
 
 func main() {
 	database.StartDB()
+	defer database.CloseConn()
+
 	server := server.NewServer()
 
 	server.Run()
