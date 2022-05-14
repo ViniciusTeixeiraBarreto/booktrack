@@ -13,7 +13,7 @@ type Book struct {
 	MediumPrice float32        `json:"medium_price"`
 	Author      string         `json:"author"`
 	ImageURL    string         `json:"img_url"`
-	CreatedAt   time.Time      `json:"created"`
+	CreatedAt   time.Time      `json:"created,omitempty" gorm:"<-:create"`
 	UpdatedAt   time.Time      `json:"updated"`
-	DeletedAt   gorm.DeletedAt `gorm:"index" json:"deleted"`
+	DeletedAt   gorm.DeletedAt `json:"deleted" gorm:"index" `
 }
