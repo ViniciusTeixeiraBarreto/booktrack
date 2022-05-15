@@ -2,6 +2,7 @@ package controller
 
 import (
 	"strconv"
+	"time"
 	"web-api/database"
 	"web-api/models"
 
@@ -177,4 +178,47 @@ func SearchesBooks(c *gin.Context) {
 	}
 
 	c.JSON(200, books)
+}
+
+func ChangeMediumPriceBook(c *gin.Context) {
+	id := c.Param("id")
+
+	newid, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "ID has to be integer",
+		})
+
+		return
+	}
+
+	db := database.GetDatabase()
+
+	var objPrice struct {
+		MediumPrice float32 `json:"medium_price"`
+	}
+
+	err = c.ShouldBindJSON(&objPrice)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "cannot find JSON: " + err.Error(),
+		})
+
+		return
+	}
+
+	var book models.Book
+	err = db.First(&book, newid).UpdateColumns(models.Book{
+		MediumPrice: objPrice.MediumPrice,
+		UpdatedAt:   time.Now(),
+	}).Error
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "cannot update medium price of this book: " + err.Error(),
+		})
+
+		return
+	}
+
+	c.JSON(200, book)
 }

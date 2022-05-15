@@ -14,3 +14,9 @@ go run main.go
 ```
 docker-compose up --build
 ```
+
+### Arquivo JSON com os endpoints configurados
+
+```
+api-insomnia.json
+```
