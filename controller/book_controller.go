@@ -132,3 +132,49 @@ func DeleteBook(c *gin.Context) {
 		"ok": true,
 	})
 }
+
+func CountBooks(c *gin.Context) {
+	db := database.GetDatabase()
+
+	var countBooks int64
+
+	err := db.Find(&models.Book{}).Count(&countBooks).Error
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "cannot list books: " + err.Error(),
+		})
+
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"books": countBooks,
+	})
+}
+
+func SearchesBooks(c *gin.Context) {
+	db := database.GetDatabase()
+
+	var book models.Book
+	var books []models.Book
+
+	err := c.ShouldBindJSON(&book)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "cannot find JSON: " + err.Error(),
+		})
+
+		return
+	}
+
+	err = db.Find(&books, book).Error
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "cannot update book: " + err.Error(),
+		})
+
+		return
+	}
+
+	c.JSON(200, books)
+}
