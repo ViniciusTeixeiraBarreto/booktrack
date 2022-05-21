@@ -7,6 +7,7 @@ import (
 	"web-api/models"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func ShowBook(c *gin.Context) {
@@ -171,7 +172,7 @@ func SearchesBooks(c *gin.Context) {
 	err = db.Find(&books, book).Error
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot update book: " + err.Error(),
+			"error": "cannot find books: " + err.Error(),
 		})
 
 		return
@@ -221,4 +222,43 @@ func ChangeMediumPriceBook(c *gin.Context) {
 	}
 
 	c.JSON(200, book)
+}
+
+//TODO remove from this file
+func MediumPriceGreaterThan(db *gorm.DB) *gorm.DB {
+	return db.Where("medium_price > ?", 18)
+}
+
+func MediumPriceLessThan(db *gorm.DB) *gorm.DB {
+	return db.Where("medium_price < ?", 20)
+}
+
+func FilterBetweenMediumPriceBook(c *gin.Context) {
+	db := database.GetDatabase()
+
+	var objPrice struct {
+		FirstValue  float32 `json:"first_value"`
+		SecondValue float32 `json:"second_value"`
+	}
+
+	err := c.ShouldBindJSON(&objPrice)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "cannot find JSON: " + err.Error(),
+		})
+
+		return
+	}
+
+	var books []models.Book
+	err = db.Where("medium_price > ? and medium_price < ?", objPrice.FirstValue, objPrice.SecondValue).Find(&books).Error
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "cannot update medium price of this book: " + err.Error(),
+		})
+
+		return
+	}
+
+	c.JSON(200, books)
 }

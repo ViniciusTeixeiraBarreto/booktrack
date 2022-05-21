@@ -20,6 +20,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 			books.GET("/count", controller.CountBooks)
 			books.POST("/searches", controller.SearchesBooks)
 			books.PUT("/:id/mediumPrice", controller.ChangeMediumPriceBook)
+			books.POST("/sale", controller.FilterBetweenMediumPriceBook)
 
 		}
 	}
