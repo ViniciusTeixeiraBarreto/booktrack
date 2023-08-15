@@ -1,14 +1,27 @@
 package controller
 
 import (
+	"errors"
+	"fmt"
 	"strconv"
-	"time"
 	"web-api/database"
 	"web-api/models"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
+
+func Create(newBook models.Book) (models.Book, error) {
+	db := database.GetDatabase()
+
+	err := db.Create(&newBook).Error
+	if err != nil {
+
+		return newBook, errors.New(fmt.Sprintf("cannot create book: " + err.Error()))
+	}
+
+	return newBook, err
+}
 
 func ShowBook(c *gin.Context) {
 	id := c.Param("id")
@@ -35,32 +48,6 @@ func ShowBook(c *gin.Context) {
 	}
 
 	c.JSON(200, book)
-}
-
-func CreateBook(c *gin.Context) {
-	db := database.GetDatabase()
-
-	var book models.Book
-
-	err := c.ShouldBindJSON(&book)
-	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot find JSON: " + err.Error(),
-		})
-
-		return
-	}
-
-	err = db.Create(&book).Error
-	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot create book: " + err.Error(),
-		})
-
-		return
-	}
-
-	c.JSON(201, book)
 }
 
 func ShowBooks(c *gin.Context) {
@@ -211,7 +198,6 @@ func ChangeMediumPriceBook(c *gin.Context) {
 	var book models.Book
 	err = db.First(&book, newid).UpdateColumns(models.Book{
 		MediumPrice: objPrice.MediumPrice,
-		UpdatedAt:   time.Now(),
 	}).Error
 	if err != nil {
 		c.JSON(400, gin.H{
