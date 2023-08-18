@@ -21,12 +21,15 @@ func NewServer() Server {
 }
 
 func (s *Server) Run() {
-	router := routes.ConfigRoutes(s.server)
-
-	router.Use(func(gin *gin.Context) {
+	s.server.Use(func(gin *gin.Context) {
 		ctx := gin.Request.Context()
+
 		ctx = database.SetConnection(ctx, nil)
+
+		gin.Request = gin.Request.WithContext(ctx)
 	})
+
+	router := routes.ConfigRoutes(s.server)
 
 	log.Println("server is running at port: ", s.port)
 	log.Fatal(router.Run(":" + s.port))
