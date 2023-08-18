@@ -7,7 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreateBook(c *gin.Context) {
+func Create(c *gin.Context) {
+	ctx := c.Request.Context()
+
 	var book models.Book
 
 	err := c.ShouldBindJSON(&book)
@@ -19,7 +21,7 @@ func CreateBook(c *gin.Context) {
 		return
 	}
 
-	book, _ = controller.Create(book)
+	book, _ = controller.Create(ctx, book)
 
 	c.JSON(201, book)
 }

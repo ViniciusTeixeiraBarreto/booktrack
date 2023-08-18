@@ -1,18 +1,19 @@
 package controller
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"strconv"
-	"web-api/database"
 	"web-api/models"
+	"web-api/pkg/database"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-func Create(newBook models.Book) (models.Book, error) {
-	db := database.GetDatabase()
+func Create(ctx context.Context, newBook models.Book) (models.Book, error) {
+	db := database.GetConnection(ctx)
 
 	err := db.Create(&newBook).Error
 	if err != nil {

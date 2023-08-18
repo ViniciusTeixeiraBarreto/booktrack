@@ -1,8 +1,9 @@
-package server
+package api
 
 import (
 	"log"
-	"web-api/server/routes"
+	"web-api/http/routes"
+	"web-api/pkg/database"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,6 +22,11 @@ func NewServer() Server {
 
 func (s *Server) Run() {
 	router := routes.ConfigRoutes(s.server)
+
+	router.Use(func(gin *gin.Context) {
+		ctx := gin.Request.Context()
+		ctx = database.SetConnection(ctx, nil)
+	})
 
 	log.Println("server is running at port: ", s.port)
 	log.Fatal(router.Run(":" + s.port))
