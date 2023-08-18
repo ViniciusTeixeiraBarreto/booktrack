@@ -1,9 +1,10 @@
 package database
 
 import (
+	"context"
 	"log"
 	"time"
-	"web-api/database/migrations"
+	"web-api/pkg/database/migrations"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -11,7 +12,7 @@ import (
 
 var db *gorm.DB
 
-func StartDB() {
+func StartDB() *gorm.DB {
 	str := "host=localhost port=5432 user=postgres dbname=books sslmode=disable password=postgres"
 
 	database, err := gorm.Open(postgres.Open(str), &gorm.Config{})
@@ -26,6 +27,8 @@ func StartDB() {
 	config.SetConnMaxLifetime(time.Hour)
 
 	migrations.RunMigrations(db)
+
+	return db
 }
 
 func CloseConn() error {
@@ -42,6 +45,30 @@ func CloseConn() error {
 	return nil
 }
 
+//TODO remove it
 func GetDatabase() *gorm.DB {
 	return db
+}
+
+type connectionKey struct{}
+
+func SetConnection(ctx context.Context, conn *gorm.DB) context.Context {
+	if conn == nil {
+		conn = db
+	}
+
+	conn.WithContext(ctx)
+	return context.WithValue(ctx, connectionKey{}, conn)
+}
+
+func GetConnection(ctx context.Context) *gorm.DB {
+	if ctx == nil {
+		return db
+	}
+	conn, has := ctx.Value(connectionKey{}).(*gorm.DB)
+
+	if !has {
+		return db
+	}
+	return conn
 }
