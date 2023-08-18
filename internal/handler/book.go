@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"booktrack/controller/book"
+	"booktrack/internal/service/book"
 	"booktrack/models"
 
 	"github.com/gin-gonic/gin"
@@ -21,9 +21,9 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	controller := book.NewController()
+	bookService := book.NewBookService()
 
-	newBook, _ = controller.Create(ctx, newBook)
+	newBook, _ = bookService.Create(ctx, newBook)
 
 	c.JSON(201, newBook)
 }

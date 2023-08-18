@@ -1,8 +1,8 @@
 package api
 
 import (
-	"booktrack/http/routes"
-	"booktrack/pkg/database"
+	"booktrack/internal/http/routes"
+	"booktrack/pkg/api/middleware"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -21,13 +21,7 @@ func NewServer() Server {
 }
 
 func (s *Server) Run() {
-	s.server.Use(func(gin *gin.Context) {
-		ctx := gin.Request.Context()
-
-		ctx = database.SetConnection(ctx, nil)
-
-		gin.Request = gin.Request.WithContext(ctx)
-	})
+	s.server.Use(middleware.SetDatabaseContext)
 
 	router := routes.ConfigRoutes(s.server)
 

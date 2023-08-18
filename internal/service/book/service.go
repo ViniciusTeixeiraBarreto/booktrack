@@ -2,24 +2,24 @@ package book
 
 import (
 	"booktrack/interfaces"
+	"booktrack/internal/repository/book"
 	"booktrack/models"
-	"booktrack/repository/book"
 	"context"
 	"errors"
 	"fmt"
 )
 
-type Controller struct {
+type BookService struct {
 	bookRepository interfaces.BookRepository
 }
 
-func NewController() Controller {
-	return Controller{
+func NewBookService() BookService {
+	return BookService{
 		bookRepository: book.NewRepository(),
 	}
 }
 
-func (c Controller) Create(ctx context.Context, newBook models.Book) (models.Book, error) {
+func (c BookService) Create(ctx context.Context, newBook models.Book) (models.Book, error) {
 	newBook, err := c.bookRepository.Create(ctx, newBook)
 	if err != nil {
 
