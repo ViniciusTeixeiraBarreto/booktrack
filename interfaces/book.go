@@ -1,8 +1,8 @@
 package interfaces
 
 import (
+	"booktrack/models"
 	"context"
-	"web-api/models"
 )
 
 type BookController interface {

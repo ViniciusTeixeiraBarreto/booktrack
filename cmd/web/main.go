@@ -1,9 +1,9 @@
 package main
 
 import (
+	"booktrack/pkg/api"
+	"booktrack/pkg/database"
 	"context"
-	"web-api/pkg/api"
-	"web-api/pkg/database"
 )
 
 func main() {

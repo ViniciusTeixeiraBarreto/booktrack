@@ -1,9 +1,9 @@
 package api
 
 import (
+	"booktrack/http/routes"
+	"booktrack/pkg/database"
 	"log"
-	"web-api/http/routes"
-	"web-api/pkg/database"
 
 	"github.com/gin-gonic/gin"
 )

@@ -1,7 +1,7 @@
 package migrations
 
 import (
-	"web-api/models"
+	"booktrack/models"
 
 	"gorm.io/gorm"
 )

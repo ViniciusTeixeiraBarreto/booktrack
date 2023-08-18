@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"web-api/controller"
-	"web-api/models"
+	"booktrack/controller"
+	"booktrack/models"
 
 	"github.com/gin-gonic/gin"
 )

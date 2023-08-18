@@ -1,10 +1,10 @@
 package database
 
 import (
+	"booktrack/pkg/database/migrations"
 	"context"
 	"log"
 	"time"
-	"web-api/pkg/database/migrations"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

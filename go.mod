@@ -1,4 +1,4 @@
-module web-api
+module booktrack
 
 go 1.16
 

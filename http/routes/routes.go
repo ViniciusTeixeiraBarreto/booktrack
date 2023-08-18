@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"web-api/controller"
-	"web-api/handler"
+	"booktrack/controller"
+	"booktrack/handler"
 
 	"github.com/gin-gonic/gin"
 )

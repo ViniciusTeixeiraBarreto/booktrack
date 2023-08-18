@@ -1,11 +1,11 @@
 package repository
 
 import (
+	"booktrack/models"
+	"booktrack/pkg/database"
 	"context"
 	"errors"
 	"fmt"
-	"web-api/models"
-	"web-api/pkg/database"
 )
 
 type Repository struct {
