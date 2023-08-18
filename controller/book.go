@@ -3,26 +3,11 @@ package controller
 import (
 	"booktrack/models"
 	"booktrack/pkg/database"
-	"context"
-	"errors"
-	"fmt"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
-
-func Create(ctx context.Context, newBook models.Book) (models.Book, error) {
-	db := database.GetConnection(ctx)
-
-	err := db.Create(&newBook).Error
-	if err != nil {
-
-		return newBook, errors.New(fmt.Sprintf("cannot create book: " + err.Error()))
-	}
-
-	return newBook, err
-}
 
 func ShowBook(c *gin.Context) {
 	id := c.Param("id")

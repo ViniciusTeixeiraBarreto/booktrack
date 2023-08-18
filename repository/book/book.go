@@ -1,4 +1,4 @@
-package repository
+package book
 
 import (
 	"booktrack/models"
@@ -11,8 +11,8 @@ import (
 type Repository struct {
 }
 
-func NewRepository() {
-
+func NewRepository() Repository {
+	return Repository{}
 }
 
 func (r Repository) Create(ctx context.Context, book models.Book) (models.Book, error) {

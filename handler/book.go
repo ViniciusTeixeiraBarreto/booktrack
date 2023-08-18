@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"booktrack/controller"
+	"booktrack/controller/book"
 	"booktrack/models"
 
 	"github.com/gin-gonic/gin"
@@ -10,9 +10,9 @@ import (
 func Create(c *gin.Context) {
 	ctx := c.Request.Context()
 
-	var book models.Book
+	var newBook models.Book
 
-	err := c.ShouldBindJSON(&book)
+	err := c.ShouldBindJSON(&newBook)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"error": "cannot find JSON: " + err.Error(),
@@ -21,7 +21,9 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	book, _ = controller.Create(ctx, book)
+	controller := book.NewController()
 
-	c.JSON(201, book)
+	newBook, _ = controller.Create(ctx, newBook)
+
+	c.JSON(201, newBook)
 }
