@@ -1,7 +1,6 @@
-# solid-lamp
-API em Golang utilizando GIN e GORM
+### BookTrack - Catálogo Pessoal de Leitura em Golang
 
-Projeto baseado no video <a href="https://www.youtube.com/watch?v=socM14c9Vfk">[GOLANG] Como criar sua primeira REST API em 30minutos!</a>
+O projeto BookTrack é uma aplicação desenvolvida em Golang que visa ajudar os entusiastas da leitura a registrar, organizar e analisar seus hábitos de leitura de forma eficiente e interativa. Através de uma interface intuitiva e amigável, os usuários podem manter um registro detalhado de todos os livros que já leram, além de acessar uma série de métricas e análises baseadas nesses dados.
 
 ### Rodar Projeto
 
