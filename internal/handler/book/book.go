@@ -131,7 +131,7 @@ func (bh Handler) SearchesBooks(c *gin.Context) {
 	c.JSON(200, books)
 }
 
-func (bh Handler) ChangeMediumPriceBook(c *gin.Context) {
+func (bh Handler) ChangeAveragePrice(c *gin.Context) {
 	ctx := c.Request.Context()
 	id := c.Param("id")
 
@@ -157,7 +157,7 @@ func (bh Handler) ChangeMediumPriceBook(c *gin.Context) {
 		return
 	}
 
-	books, _ := bh.bookService.ChangeMediumPriceBook(ctx, objPrice.MediumPrice, newid)
+	books, _ := bh.bookService.ChangeAveragePrice(ctx, objPrice.MediumPrice, newid)
 
 	c.JSON(200, books)
 }

@@ -9,7 +9,6 @@ import (
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
 	main := router.Group("api/v1")
 	{
-
 		bookHandler := handler.NewHandler()
 
 		books := main.Group("books")
@@ -22,7 +21,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 			books.GET("/count", bookHandler.CountBooks)
 			books.POST("/searches", bookHandler.SearchesBooks)
-			books.PUT("/:id/mediumPrice", bookHandler.ChangeMediumPriceBook)
+			books.PUT("/:id/average-price", bookHandler.ChangeAveragePrice)
 			books.POST("/sale", bookHandler.FilterBetweenMediumPriceBook)
 
 		}

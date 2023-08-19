@@ -46,11 +46,12 @@ func (c BookService) Search(ctx context.Context, search models.Book) ([]models.B
 	return c.bookRepository.Search(ctx, search)
 }
 
-func (c BookService) ChangeMediumPriceBook(ctx context.Context, mediumPrice float32, bookId uuid.UUID) (models.Book, error) {
-	return c.bookRepository.Update(ctx, models.Book{
-		Metadata:    models.Metadata{ID: bookId},
-		MediumPrice: mediumPrice,
-	})
+func (c BookService) ChangeAveragePrice(ctx context.Context, mediumPrice float32, bookId uuid.UUID) (models.Book, error) {
+	book, _ := c.bookRepository.Get(ctx, bookId)
+
+	book.MediumPrice = mediumPrice
+
+	return c.bookRepository.Update(ctx, book)
 }
 
 func (c BookService) FilterBetweenMediumPriceBook(ctx context.Context, firstValue float64, secondValue float64) ([]models.Book, error) {
