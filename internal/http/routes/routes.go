@@ -1,8 +1,7 @@
 package routes
 
 import (
-	"booktrack/internal/handler"
-	service "booktrack/internal/service"
+	handler "booktrack/internal/handler/book"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,18 +9,21 @@ import (
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
 	main := router.Group("api/v1")
 	{
+
+		bookHandler := handler.NewHandler()
+
 		books := main.Group("books")
 		{
-			books.GET("/:id", service.ShowBook)
-			books.GET("/", service.ShowBooks)
-			books.POST("/", handler.Create)
-			books.PUT("/", service.UpdateBooks)
-			books.DELETE("/:id", service.DeleteBook)
+			books.GET("/:id", bookHandler.ShowBook)
+			books.GET("/", bookHandler.ShowBooks)
+			books.POST("/", bookHandler.Create)
+			books.PUT("/", bookHandler.UpdateBooks)
+			books.DELETE("/:id", bookHandler.DeleteBook)
 
-			books.GET("/count", service.CountBooks)
-			books.POST("/searches", service.SearchesBooks)
-			books.PUT("/:id/mediumPrice", service.ChangeMediumPriceBook)
-			books.POST("/sale", service.FilterBetweenMediumPriceBook)
+			books.GET("/count", bookHandler.CountBooks)
+			books.POST("/searches", bookHandler.SearchesBooks)
+			books.PUT("/:id/mediumPrice", bookHandler.ChangeMediumPriceBook)
+			books.POST("/sale", bookHandler.FilterBetweenMediumPriceBook)
 
 		}
 	}
