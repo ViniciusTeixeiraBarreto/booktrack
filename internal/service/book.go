@@ -1,4 +1,4 @@
-package controller
+package service
 
 import (
 	"booktrack/models"
@@ -196,7 +196,7 @@ func ChangeMediumPriceBook(c *gin.Context) {
 	c.JSON(200, book)
 }
 
-//TODO remove from this file
+// TODO remove from this file
 func MediumPriceGreaterThan(db *gorm.DB) *gorm.DB {
 	return db.Where("medium_price > ?", 18)
 }

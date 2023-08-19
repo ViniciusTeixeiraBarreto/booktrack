@@ -4,6 +4,7 @@ import (
 	"booktrack/interfaces"
 	"booktrack/internal/repository/book"
 	"booktrack/models"
+	"booktrack/models/services"
 	"context"
 	"errors"
 	"fmt"
@@ -13,7 +14,7 @@ type BookService struct {
 	bookRepository interfaces.BookRepository
 }
 
-func NewBookService() BookService {
+func NewBookService(container *services.ServicesContainer) BookService {
 	return BookService{
 		bookRepository: book.NewRepository(),
 	}
