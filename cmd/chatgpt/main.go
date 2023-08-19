@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -12,14 +13,13 @@ func main() {
 	apiKey := ""
 	apiUrl := "https://api.openai.com/v1/completions"
 
-	input := "Baseando nos livros 'habitos atomicos', 'a mente do empreendedor'. quais livros devo ler após"
+	input := `Baseando nos livros 'habitos atomicos', 'a mente do empreendedor'. me responsa os proximos livros recomendados em formato json {"nome":""}`
 
 	// Crie uma estrutura para a solicitação
 	requestBody := map[string]interface{}{
-		"model":       "text-davinci-002",
-		"prompt":      input,
-		"max_tokens":  150,
-		"temperature": 1.0,
+		"model":      "text-davinci-002",
+		"prompt":     input,
+		"max_tokens": 3000,
 	}
 
 	requestBodyBytes, err := json.Marshal(requestBody)
@@ -57,4 +57,13 @@ func main() {
 
 	// Exiba a resposta JSON
 	fmt.Println(string(responseBody))
+
+	var data map[string]interface{}
+
+	err = json.Unmarshal(responseBody, &data)
+	if err != nil {
+		log.Fatalf("Erro ao analisar a resposta JSON: %v", err)
+	}
+	response := data["choices"].([]interface{})[0].(map[string]interface{})["text"].(string)
+	fmt.Printf("Resposta: %s\n", response)
 }
