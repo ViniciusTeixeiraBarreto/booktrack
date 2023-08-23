@@ -4,8 +4,6 @@ import (
 	"booktrack/models"
 	"booktrack/pkg/database"
 	"context"
-	"errors"
-	"fmt"
 
 	"github.com/google/uuid"
 )
@@ -17,24 +15,24 @@ func NewRepository() Repository {
 	return Repository{}
 }
 
-func (r Repository) Create(ctx context.Context, book models.Book) (models.Book, error) {
+func (r Repository) Create(ctx context.Context, entity models.Book) (models.Book, error) {
 	db := database.GetConnection(ctx)
 
-	err := db.Create(&book).Error
+	err := db.Create(&entity).Error
 	if err != nil {
-		return book, errors.New(fmt.Sprintf("cannot create book: " + err.Error()))
+		return entity, err
 	}
 
-	return book, nil
+	return entity, nil
 }
 
-func (r Repository) Get(ctx context.Context, bookID uuid.UUID) (models.Book, error) {
+func (r Repository) Get(ctx context.Context, id uuid.UUID) (models.Book, error) {
 	db := database.GetConnection(ctx)
 
 	var book models.Book
-	err := db.First(&book, bookID).Error
+	err := db.First(&book, id).Error
 	if err != nil {
-		return book, errors.New(fmt.Sprintf("cannot find book: " + err.Error()))
+		return book, err
 	}
 
 	return book, nil
@@ -46,29 +44,30 @@ func (r Repository) GetAll(ctx context.Context) ([]models.Book, error) {
 	var book []models.Book
 	err := db.Find(&book).Error
 	if err != nil {
-		return book, errors.New(fmt.Sprintf("cannot find all books: " + err.Error()))
+		return book, err
 	}
 
 	return book, nil
 }
 
-func (r Repository) Update(ctx context.Context, bookToUpdate models.Book) (models.Book, error) {
+func (r Repository) Update(ctx context.Context, entity models.Book) (models.Book, error) {
 	db := database.GetConnection(ctx)
 
-	err := db.Save(&bookToUpdate).Error
+	err := db.Save(&entity).Error
+
 	if err != nil {
-		return bookToUpdate, errors.New(fmt.Sprintf("cannot find all books: " + err.Error()))
+		return entity, err
 	}
 
-	return bookToUpdate, nil
+	return entity, nil
 }
 
 func (r Repository) Delete(ctx context.Context, id uuid.UUID) error {
 	db := database.GetConnection(ctx)
-
 	err := db.Delete(&models.Book{}, id).Error
+
 	if err != nil {
-		return errors.New(fmt.Sprintf("cannot find all books: " + err.Error()))
+		return err
 	}
 
 	return nil
@@ -76,38 +75,36 @@ func (r Repository) Delete(ctx context.Context, id uuid.UUID) error {
 
 func (r Repository) Count(ctx context.Context) (int64, error) {
 	db := database.GetConnection(ctx)
+	var count int64
 
-	var countBooks int64
-
-	err := db.Find(&models.Book{}).Count(&countBooks).Error
+	err := db.Find(&models.Book{}).Count(&count).Error
 	if err != nil {
-		return countBooks, err
+		return count, err
 	}
 
-	return countBooks, nil
+	return count, nil
 }
 
 func (r Repository) Search(ctx context.Context, search models.Book) ([]models.Book, error) {
 	db := database.GetConnection(ctx)
+	entities := []models.Book{}
 
-	books := []models.Book{}
-
-	err := db.Find(&books, search).Error
+	err := db.Find(&entities, search).Error
 	if err != nil {
-		return books, err
+		return entities, err
 	}
 
-	return books, nil
+	return entities, nil
 }
 
 func (r Repository) FilterBetweenMediumPriceBook(ctx context.Context, firstValue float64, secondValue float64) ([]models.Book, error) {
 	db := database.GetConnection(ctx)
+	var entities []models.Book
 
-	var books []models.Book
-	err := db.Where("medium_price > ? and medium_price < ?", firstValue, secondValue).Find(&books).Error
+	err := db.Where("medium_price > ? and medium_price < ?", firstValue, secondValue).Find(&entities).Error
 	if err != nil {
-		return books, err
+		return entities, err
 	}
 
-	return books, nil
+	return entities, nil
 }

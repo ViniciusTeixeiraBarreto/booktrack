@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"booktrack/internal/service/book"
+	book_service "booktrack/internal/service/book"
 	"booktrack/models"
 
 	"github.com/gin-gonic/gin"
@@ -9,12 +9,12 @@ import (
 )
 
 type Handler struct {
-	bookService book.BookService
+	bookService book_service.BookService
 }
 
 func NewHandler() Handler {
 	return Handler{
-		bookService: book.NewBookService(),
+		bookService: book_service.NewBookService(),
 	}
 }
 
@@ -37,7 +37,7 @@ func (bh Handler) Create(c *gin.Context) {
 	c.JSON(201, newBook)
 }
 
-func (bh Handler) ShowBook(c *gin.Context) {
+func (bh Handler) Get(c *gin.Context) {
 	ctx := c.Request.Context()
 	id := c.Param("id")
 
@@ -55,7 +55,7 @@ func (bh Handler) ShowBook(c *gin.Context) {
 	c.JSON(200, books)
 }
 
-func (bh Handler) ShowBooks(c *gin.Context) {
+func (bh Handler) GetAll(c *gin.Context) {
 	ctx := c.Request.Context()
 
 	books, _ := bh.bookService.GetAll(ctx)
@@ -63,7 +63,7 @@ func (bh Handler) ShowBooks(c *gin.Context) {
 	c.JSON(200, books)
 }
 
-func (bh Handler) UpdateBooks(c *gin.Context) {
+func (bh Handler) Update(c *gin.Context) {
 	ctx := c.Request.Context()
 	var bookToUpdate models.Book
 
@@ -81,7 +81,7 @@ func (bh Handler) UpdateBooks(c *gin.Context) {
 	c.JSON(200, books)
 }
 
-func (bh Handler) DeleteBook(c *gin.Context) {
+func (bh Handler) Delete(c *gin.Context) {
 	ctx := c.Request.Context()
 	id := c.Param("id")
 
