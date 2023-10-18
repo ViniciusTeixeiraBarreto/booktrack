@@ -5,6 +5,7 @@ import (
 	"booktrack/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
 
@@ -18,168 +19,168 @@ func NewHandler() Handler {
 	}
 }
 
-func (bh Handler) Create(c *gin.Context) {
-	ctx := c.Request.Context()
+func (bh Handler) Create(c *fiber.Ctx) error {
+	ctx := c.Context()
 
 	var newBook models.Book
 
-	err := c.ShouldBindJSON(&newBook)
+	err := c.BodyParser(&newBook)
 	if err != nil {
-		c.JSON(400, gin.H{
+		c.Status(400).JSON(gin.H{
 			"error": "cannot find JSON: " + err.Error(),
 		})
 
-		return
+		return nil
 	}
 
 	newBook, _ = bh.bookService.Create(ctx, newBook)
 
-	c.JSON(201, newBook)
+	return c.Status(201).JSON(newBook)
 }
 
-func (bh Handler) Get(c *gin.Context) {
-	ctx := c.Request.Context()
-	id := c.Param("id")
+func (bh Handler) Get(c *fiber.Ctx) error {
+	ctx := c.Context()
+	id := c.Get("id")
 
 	newid, err := uuid.Parse(id)
 	if err != nil {
-		c.JSON(400, gin.H{
+		c.Status(400).JSON(gin.H{
 			"error": "ID has to be integer",
 		})
 
-		return
+		return nil
 	}
 
 	books, _ := bh.bookService.Get(ctx, newid)
 
-	c.JSON(200, books)
+	return c.Status(200).JSON(books)
 }
 
-func (bh Handler) GetAll(c *gin.Context) {
-	ctx := c.Request.Context()
+func (bh Handler) GetAll(c *fiber.Ctx) error {
+	ctx := c.Context()
 
 	books, _ := bh.bookService.GetAll(ctx)
 
-	c.JSON(200, books)
+	return c.Status(200).JSON(books)
 }
 
-func (bh Handler) Update(c *gin.Context) {
-	ctx := c.Request.Context()
+func (bh Handler) Update(c *fiber.Ctx) error {
+	ctx := c.Context()
 	var bookToUpdate models.Book
 
-	err := c.ShouldBindJSON(&bookToUpdate)
+	err := c.BodyParser(&bookToUpdate)
 	if err != nil {
-		c.JSON(400, gin.H{
+		c.Status(400).JSON(gin.H{
 			"error": "cannot find JSON: " + err.Error(),
 		})
 
-		return
+		return nil
 	}
 
 	books, _ := bh.bookService.Update(ctx, bookToUpdate)
 
-	c.JSON(200, books)
+	return c.Status(200).JSON(books)
 }
 
-func (bh Handler) Delete(c *gin.Context) {
-	ctx := c.Request.Context()
-	id := c.Param("id")
+func (bh Handler) Delete(c *fiber.Ctx) error {
+	ctx := c.Context()
+	id := c.Get("id")
 
 	newid, err := uuid.Parse(id)
 	if err != nil {
-		c.JSON(400, gin.H{
+		c.Status(400).JSON(gin.H{
 			"error": "ID has to be integer",
 		})
 
-		return
+		return nil
 	}
 
 	_ = bh.bookService.Delete(ctx, newid)
 
-	c.JSON(200, gin.H{
+	return c.Status(200).JSON(gin.H{
 		"ok": true,
 	})
 }
 
-func (bh Handler) CountBooks(c *gin.Context) {
-	ctx := c.Request.Context()
+func (bh Handler) CountBooks(c *fiber.Ctx) error {
+	ctx := c.Context()
 	var countBooks int64
 
 	countBooks, _ = bh.bookService.Count(ctx)
 
-	c.JSON(200, gin.H{
+	return c.Status(200).JSON(gin.H{
 		"books": countBooks,
 	})
 }
 
-func (bh Handler) SearchesBooks(c *gin.Context) {
-	ctx := c.Request.Context()
+func (bh Handler) SearchesBooks(c *fiber.Ctx) error {
+	ctx := c.Context()
 	var book models.Book
 	var books []models.Book
 
-	err := c.ShouldBindJSON(&book)
+	err := c.BodyParser(&book)
 	if err != nil {
-		c.JSON(400, gin.H{
+		c.Status(400).JSON(gin.H{
 			"error": "cannot find JSON: " + err.Error(),
 		})
 
-		return
+		return nil
 	}
 
 	books, _ = bh.bookService.Search(ctx, book)
 
-	c.JSON(200, books)
+	return c.Status(200).JSON(books)
 }
 
-func (bh Handler) ChangeAveragePrice(c *gin.Context) {
-	ctx := c.Request.Context()
-	id := c.Param("id")
+func (bh Handler) ChangeAveragePrice(c *fiber.Ctx) error {
+	ctx := c.Context()
+	id := c.Get("id")
 
 	newid, err := uuid.Parse(id)
 	if err != nil {
-		c.JSON(400, gin.H{
+		c.Status(400).JSON(gin.H{
 			"error": "ID has to be integer",
 		})
 
-		return
+		return nil
 	}
 
 	var objPrice struct {
 		MediumPrice float32 `json:"medium_price"`
 	}
 
-	err = c.ShouldBindJSON(&objPrice)
+	err = c.BodyParser(&objPrice)
 	if err != nil {
-		c.JSON(400, gin.H{
+		c.Status(400).JSON(gin.H{
 			"error": "cannot find JSON: " + err.Error(),
 		})
 
-		return
+		return nil
 	}
 
 	books, _ := bh.bookService.ChangeAveragePrice(ctx, objPrice.MediumPrice, newid)
 
-	c.JSON(200, books)
+	return c.Status(200).JSON(books)
 }
 
-func (bh Handler) FilterBetweenMediumPriceBook(c *gin.Context) {
-	ctx := c.Request.Context()
+func (bh Handler) FilterBetweenMediumPriceBook(c *fiber.Ctx) error {
+	ctx := c.Context()
 
 	var objPrice struct {
 		FirstValue  float64 `json:"first_value"`
 		SecondValue float64 `json:"second_value"`
 	}
 
-	err := c.ShouldBindJSON(&objPrice)
+	err := c.BodyParser(&objPrice)
 	if err != nil {
-		c.JSON(400, gin.H{
+		c.Status(400).JSON(gin.H{
 			"error": "cannot find JSON: " + err.Error(),
 		})
 
-		return
+		return nil
 	}
 
 	books, _ := bh.bookService.FilterBetweenMediumPriceBook(ctx, objPrice.FirstValue, objPrice.SecondValue)
 
-	c.JSON(200, books)
+	return c.Status(200).JSON(books)
 }

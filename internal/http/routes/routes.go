@@ -3,29 +3,20 @@ package routes
 import (
 	handler "booktrack/internal/handler/book"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
 )
 
-func ConfigRoutes(router *gin.Engine) *gin.Engine {
-	main := router.Group("api/v1")
-	{
-		bookHandler := handler.NewHandler()
+func BookRouter(router fiber.Router) {
+	bookHandler := handler.NewHandler()
 
-		books := main.Group("books")
-		{
-			books.GET("/:id", bookHandler.Get)
-			books.GET("/", bookHandler.GetAll)
-			books.POST("/", bookHandler.Create)
-			books.PUT("/", bookHandler.Update)
-			books.DELETE("/:id", bookHandler.Delete)
+	router.Get("/:id", bookHandler.Get)
+	router.Get("/", bookHandler.GetAll)
+	router.Post("/", bookHandler.Create)
+	router.Put("/", bookHandler.Update)
+	router.Delete("/:id", bookHandler.Delete)
 
-			books.GET("/count", bookHandler.CountBooks)
-			books.POST("/searches", bookHandler.SearchesBooks)
-			books.PUT("/:id/average-price", bookHandler.ChangeAveragePrice)
-			books.POST("/sale", bookHandler.FilterBetweenMediumPriceBook)
-
-		}
-	}
-
-	return router
+	router.Get("/count", bookHandler.CountBooks)
+	router.Post("/searches", bookHandler.SearchesBooks)
+	router.Put("/:id/average-price", bookHandler.ChangeAveragePrice)
+	router.Post("/sale", bookHandler.FilterBetweenMediumPriceBook)
 }

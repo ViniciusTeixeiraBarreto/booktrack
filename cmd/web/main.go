@@ -16,5 +16,5 @@ func main() {
 
 	server := api.NewServer()
 
-	server.Run()
+	server.RunFiber()
 }

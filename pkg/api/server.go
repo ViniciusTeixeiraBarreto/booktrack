@@ -2,29 +2,33 @@ package api
 
 import (
 	"booktrack/internal/http/routes"
-	"booktrack/pkg/api/middleware"
 	"log"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 type Server struct {
-	port   string
-	server *gin.Engine
+	port  string
+	fiber *fiber.App
 }
 
 func NewServer() Server {
 	return Server{
-		port:   "5000",
-		server: gin.Default(),
+		port:  "5000",
+		fiber: fiber.New(),
 	}
 }
 
-func (s *Server) Run() {
-	s.server.Use(middleware.SetDatabaseContext)
+func (s *Server) RunFiber() {
+	s.fiber.Use(cors.New(cors.Config{
+		AllowHeaders:     "Origin,Content-Type,Accept,Content-Length,Accept-Language,Accept-Encoding,Connection,Access-Control-Allow-Origin",
+		AllowOrigins:     "*",
+		AllowCredentials: true,
+		AllowMethods:     "GET,POST,HEAD,PUT,DELETE,PATCH,OPTIONS",
+	}))
 
-	router := routes.ConfigRoutes(s.server)
+	s.fiber.Group("/books").Route("/", routes.BookRouter)
 
-	log.Println("server is running at port: ", s.port)
-	log.Fatal(router.Run(":" + s.port))
+	log.Fatal(s.fiber.Listen(":5000"))
 }
