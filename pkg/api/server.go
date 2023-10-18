@@ -34,6 +34,7 @@ func (s *Server) RunFiber() {
 	}))
 
 	s.fiber.Group("/books").Route("/", routes.BookRouter)
+	s.fiber.Group("/author").Route("/", routes.AuthorRouter)
 
 	log.Fatal(s.fiber.Listen(":5000"))
 }

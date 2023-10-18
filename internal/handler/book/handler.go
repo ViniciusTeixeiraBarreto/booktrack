@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"booktrack/internal/handler/dto"
 	book_service "booktrack/internal/service/book"
 	"booktrack/models"
 
@@ -22,20 +23,23 @@ func NewHandler() Handler {
 func (bh Handler) Create(c *fiber.Ctx) error {
 	ctx := c.Context()
 
-	var newBook models.Book
+	var newBook dto.CreateBook
 
 	err := c.BodyParser(&newBook)
 	if err != nil {
-		c.Status(400).JSON(gin.H{
+		return c.Status(400).JSON(gin.H{
 			"error": "cannot find JSON: " + err.Error(),
 		})
-
-		return nil
 	}
 
-	newBook, _ = bh.bookService.Create(ctx, newBook)
+	createdBook, err := bh.bookService.Create(ctx, newBook.ToBook())
+	if err != nil {
+		return c.Status(400).JSON(gin.H{
+			"error": "cannot not create book: " + err.Error(),
+		})
+	}
 
-	return c.Status(201).JSON(newBook)
+	return c.Status(201).JSON(createdBook)
 }
 
 func (bh Handler) Get(c *fiber.Ctx) error {
