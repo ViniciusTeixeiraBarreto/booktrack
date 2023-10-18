@@ -40,7 +40,7 @@ func (bh Handler) Create(c *fiber.Ctx) error {
 
 func (bh Handler) Get(c *fiber.Ctx) error {
 	ctx := c.Context()
-	id := c.Get("id")
+	id := c.Params("id")
 
 	newid, err := uuid.Parse(id)
 	if err != nil {
@@ -84,18 +84,20 @@ func (bh Handler) Update(c *fiber.Ctx) error {
 
 func (bh Handler) Delete(c *fiber.Ctx) error {
 	ctx := c.Context()
-	id := c.Get("id")
+	id := c.Params("id")
 
 	newid, err := uuid.Parse(id)
 	if err != nil {
-		c.Status(400).JSON(gin.H{
-			"error": "ID has to be integer",
+		return c.Status(400).JSON(gin.H{
+			"error": "ID has to be uuid",
 		})
-
-		return nil
 	}
 
-	_ = bh.bookService.Delete(ctx, newid)
+	if err = bh.bookService.Delete(ctx, newid); err != nil {
+		return c.Status(400).JSON(gin.H{
+			"error": "broken service",
+		})
+	}
 
 	return c.Status(200).JSON(gin.H{
 		"ok": true,
@@ -134,7 +136,7 @@ func (bh Handler) SearchesBooks(c *fiber.Ctx) error {
 
 func (bh Handler) ChangeAveragePrice(c *fiber.Ctx) error {
 	ctx := c.Context()
-	id := c.Get("id")
+	id := c.Params("id")
 
 	newid, err := uuid.Parse(id)
 	if err != nil {
