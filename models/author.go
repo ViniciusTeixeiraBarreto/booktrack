@@ -3,5 +3,5 @@ package models
 type Author struct {
 	Metadata
 
-	Name string
+	Name string `json:"name"`
 }
