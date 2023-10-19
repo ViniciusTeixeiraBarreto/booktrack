@@ -42,7 +42,7 @@ func (r Repository) GetAll(ctx context.Context) ([]models.Book, error) {
 	db := database.GetConnection(ctx)
 
 	var book []models.Book
-	err := db.Find(&book).Error
+	err := db.Preload("Authors").Find(&book).Error
 	if err != nil {
 		return book, err
 	}

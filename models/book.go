@@ -8,5 +8,5 @@ type Book struct {
 	MediumPrice float32 `json:"medium_price"`
 	ImageURL    string  `json:"img_url"`
 
-	Authors []Author `gorm:"many2many:book_authors;"`
+	Authors []Author `json:"authors" gorm:"many2many:book_authors;"`
 }
